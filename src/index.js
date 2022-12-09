@@ -4,7 +4,7 @@ const Store = require("electron-store");
 const path = require("path");
 const bwipjs = require("bwip-js");
 const fs = require("fs");
-const { usb, getDeviceList } = require("usb");
+const {PosPrinter} = require("electron-pos-printer")
 
 let mainWindow;
 
@@ -31,12 +31,9 @@ app.whenReady().then(() => {
       },
    });
    mainWindow.loadFile(path.join(__dirname, "index.html"));
-
-   // Open the DevTools.
-   mainWindow.webContents.openDevTools();
-
    const products = store.get("products");
    mainWindow.webContents.send("fromMain", products);
+   mainWindow.webContents.openDevTools()
 });
 
 app.on("window-all-closed", () => {
@@ -95,12 +92,13 @@ ipcMain.on("searchProduct", function (event, arg) {
    const product = products.find((item) => item.id === arg);
    if (product) {
       if (product.quantity === 0) {
-         mainWindow.webContents.send("searchResult", { ...product, name: "Bu mahsulot qolmadi" });
+         mainWindow.webContents.send("searchResult", { product: {...product, name: "Bu mahsulot qolmadi"} });
+         console.log(product)
       } else {
          mainWindow.webContents.send("searchResult", { product });
       }
    } else {
-      mainWindow.webContents.send("searchResult", { name: "Bunday mahsulot topilmadi", price: null });
+      mainWindow.webContents.send("searchResult", { product: {name: "Bunday mahsulot topilmadi", price: null} });
    }
 });
 
@@ -147,26 +145,43 @@ ipcMain.on("getProduct", () => {
    mainWindow.webContents.send("fromMain", products);
 });
 
-ipcMain.on("generateQR", (event, arg) => {
-   bwipjs.toBuffer(
-      {
-         bcid: "code128",
-         text: arg.id,
-         includetext: true,
-         textxalign: "center",
-         padding: 10,
-         scale: 4,
-      },
-      function (err, png) {
-         if (err) {
-            console.log(err);
-         } else {
-            fs.createWriteStream(__dirname + "/codes/" + arg.name + ".png").write(png);
-         }
-      },
-   );
+ipcMain.on("generateQR", async (event, arg) => {
+   PosPrinter.print([{
+      type: 'barCode',
+      value: arg.id,
+      height: 70,
+      width: 2,
+      displayValue: true,
+      fontsize: 20,
+      style: {
+         scale: 2,
+         textAlign: 'center',
+         marginBottom: 10
+      }
+   }], {
+      preview: false,
+      margin: '0 0 30px 0',
+      copies: 1,
+      printerName: 'XP-58 (copy 1)',
+      timeOutPerLine: 600,
+      pageSize: '80mm'
+   }).then((data)=>{console.log(data)}).catch((er)=> console.log(er))
+   // bwipjs.toBuffer(
+   //    {
+   //       bcid: "code128",
+   //       text: arg.id,
+   //       includetext: true,
+   //       textxalign: "center",
+   //       padding: 10,
+   //       scale: 4,
+   //    },
+   //    function (err, png) {
+   //       if (err) {
+   //          console.log(err);
+   //       } else {
+   //          fs.createWriteStream(__dirname + "/codes/" + arg.name + ".png").write(png);
+   //       }
+   //    },
+   // );
+// }
 });
-
-console.log(usb.getDeviceList());
-
-console.log(usb);

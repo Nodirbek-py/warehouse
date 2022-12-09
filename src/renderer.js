@@ -256,5 +256,4 @@ const generateQR = () => {
          id: document.querySelector("#codeID").value,
          name: document.querySelector("#codeName").value,
       });
-   alert("Shtrix kodingiz yaratildi va kompyuterga saqlab qo'yildi");
 };
