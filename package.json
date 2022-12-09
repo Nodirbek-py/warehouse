@@ -1,0 +1,42 @@
+{
+   "name": "warehouse",
+   "productName": "warehouse",
+   "version": "1.0.0",
+   "description": "Warehouse application for store",
+   "main": "src/index.js",
+   "scripts": {
+      "start": "electron-forge start",
+      "package": "electron-forge package",
+      "make": "electron-forge make",
+      "publish": "electron-forge publish",
+      "lint": "echo \"No linting configured\""
+   },
+   "keywords": [],
+   "author": {
+      "name": "Nodirbek Vositov",
+      "email": "xesos2001@gmail.com"
+   },
+   "license": "MIT",
+   "dependencies": {
+      "bwip-js": "^3.2.1",
+      "electron-squirrel-startup": "^1.0.0",
+      "electron-store": "^8.1.0",
+      "usb": "^2.5.2"
+   },
+   "devDependencies": {
+      "@electron-forge/cli": "^6.0.4",
+      "@electron-forge/maker-deb": "^6.0.4",
+      "@electron-forge/maker-rpm": "^6.0.4",
+      "@electron-forge/maker-squirrel": "^6.0.4",
+      "@electron-forge/maker-zip": "^6.0.4",
+      "electron": "22.0.0",
+      "eslint": "^8.0.1",
+      "eslint-config-prettier": "^8.5.0",
+      "eslint-config-standard": "^17.0.0",
+      "eslint-plugin-import": "^2.25.2",
+      "eslint-plugin-n": "^15.0.0",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-promise": "^6.0.0",
+      "prettier": "^2.8.0"
+   }
+}

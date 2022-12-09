@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8" />
+      <title>Hello World!</title>
+      <link rel="stylesheet" href="index.css" />
+   </head>
+   <body>
+      <section>
+         <aside>
+            <nav>
+               <div class="logo">
+                  <h1>MR<br />Service Center</h1>
+               </div>
+               <ul class="navlinks">
+                  <li id="kassa">Kassa</li>
+                  <li id="report">Hisobot</li>
+                  <li id="code">Kod Generator</li>
+                  <li id="goods">Mahsulotlar</li>
+               </ul>
+            </nav>
+         </aside>
+         <div class="center">
+            <div class="content"></div>
+         </div>
+      </section>
+      <main>
+         <div class="page kassa">
+            <div class="kassa-grid">
+               <div class="kassa-left">
+                  <div class="kassa-header">
+                     <span class="kassa-text">ID</span>
+                     <span class="kassa-text">Nom</span>
+                     <span class="kassa-text">Miqdor</span>
+                     <span class="kassa-text">Umumiy</span>
+                  </div>
+               </div>
+               <div class="kassa-right">
+                  <div>
+                     <div class="kassa-nav">
+                        <h1 class="title">Umumiy: <span class="money" id="kassaTotal"></span> so'm</h1>
+                        <button class="btn-add" id="kassaFinish">Yakunlash</button>
+                     </div>
+                     <hr />
+                  </div>
+                  <div class="right-middle">
+                     <h1 id="productTitle">Tovar IDsini kiriting</h1>
+                     <p id="productPrice"></p>
+                     <input type="number" id="saleQuantity" placeholder="Miqdor" min="1" step="1" />
+                     <button class="btn-add" id="confirm">Hisobga qo'shish</button>
+                  </div>
+                  <div class="right-bottom">
+                     <hr />
+                     <div class="input-field">
+                        <input placeholder="ID" type="text" id="search" />
+                        <button class="btn-add" id="searchBtn">Qo'shish</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="page report">
+            <h1 class="title">Hisobot</h1>
+            <div class="goods-nav">
+               <div class="nav-side">
+                  <p class="nav-text">Mahsulotlar soni: <span class="orange" id="reportCount">24</span></p>
+               </div>
+               <div class="nav-side">
+                  <p class="nav-text">Umumiy summa: <span class="orange" id="reportSumm">456000000</span> so'm</p>
+               </div>
+            </div>
+            <div class="goods-table" id="reportTable">
+               <div class="goods-header report">
+                  <span class="header-text">ID</span>
+                  <span class="header-text">Nom</span>
+                  <span class="header-text">Narhi</span>
+                  <span class="header-text">Miqdor</span>
+                  <span class="header-text">Umumiy</span>
+               </div>
+               <div class="goods-row report">
+                  <span class="row-text">2</span>
+                  <span class="row-text">Tovar #2</span>
+                  <span class="row-text">140000</span>
+                  <span class="row-text">2</span>
+                  <span class="row-text">280000</span>
+               </div>
+               <div class="goods-row report">
+                  <span class="row-text">2</span>
+                  <span class="row-text">Tovar #2</span>
+                  <span class="row-text">140000</span>
+                  <span class="row-text">2</span>
+                  <span class="row-text">280000</span>
+               </div>
+               <div class="goods-row report">
+                  <span class="row-text">2</span>
+                  <span class="row-text">Tovar #2</span>
+                  <span class="row-text">140000</span>
+                  <span class="row-text">2</span>
+                  <span class="row-text">280000</span>
+               </div>
+               <div class="goods-row report">
+                  <span class="row-text">2</span>
+                  <span class="row-text">Tovar #2</span>
+                  <span class="row-text">140000</span>
+                  <span class="row-text">2</span>
+                  <span class="row-text">280000</span>
+               </div>
+               <div class="goods-row report">
+                  <span class="row-text">2</span>
+                  <span class="row-text">Tovar #2</span>
+                  <span class="row-text">140000</span>
+                  <span class="row-text">2</span>
+                  <span class="row-text">280000</span>
+               </div>
+            </div>
+         </div>
+         <div class="page code">
+            <div class="code-grid">
+               <h1 class="title" style="font-size: 24px">Shtrix-kod yaratish uchun quyidagilarni to'ldiring</h1>
+               <div class="form">
+                  <input type="text" placeholder="ID" id="codeID" />
+                  <input type="text" placeholder="Nom" id="codeName" />
+                  <button class="btn-add" style="margin-top: 15px" onclick="generateQR()">Yakunlash</button>
+               </div>
+            </div>
+         </div>
+         <div class="page goods">
+            <h1 class="title">Mahsulotlar</h1>
+            <div class="goods-nav">
+               <div class="nav-side">
+                  <p class="nav-text">Mahsulotlar soni: <span class="orange" id="goodsCount"></span></p>
+                  <span class="x-space"></span>
+                  <p class="nav-text">Umumiy summa: <span class="orange" id="goodsSumm"></span> so'm</p>
+               </div>
+               <div class="nav-side">
+                  <button class="btn-add" id="add-btn">Mahsulot qo'shish</button>
+               </div>
+            </div>
+            <div class="goods-table" id="productsTable">
+               <div class="goods-header">
+                  <span class="header-text">ID</span>
+                  <span class="header-text">Nom</span>
+                  <span class="header-text">Narhi</span>
+                  <span class="header-text">Miqdor</span>
+                  <span class="header-text">Umumiy</span>
+               </div>
+            </div>
+            <div class="overlay" id="add">
+               <div class="goods-popup">
+                  <img src="./img/xicon.png" alt="" id="close-btn" />
+
+                  <h1 class="title">Mahsulot qo'shish</h1>
+                  <div class="form">
+                     <input type="text" placeholder="ID" id="addID" />
+                     <input type="text" placeholder="Nom" id="addName" />
+                     <input type="number" placeholder="Miqdor" id="addQuantity" />
+                     <input type="number" placeholder="Narh" id="addPrice" />
+                  </div>
+                  <button class="btn-add" id="addProduct">Yakunlash</button>
+               </div>
+            </div>
+
+            <div class="overlay" id="edit">
+               <div class="goods-popup" id>
+                  <img src="./img/xicon.png" alt="" id="close-btn" />
+
+                  <h1 class="title">Mahsulot o'zgartirish</h1>
+                  <div class="form">
+                     <input type="text" placeholder="Nom" id="namePopup" />
+                     <input type="number" placeholder="Miqdor" id="pricePopup" />
+                     <input type="number" placeholder="Narh" id="quantityPopup" />
+                  </div>
+                  <button class="btn-add" id="editProduct">O'zgartirish</button>
+               </div>
+            </div>
+         </div>
+      </main>
+      <script src="./renderer.js"></script>
+   </body>
+</html>
