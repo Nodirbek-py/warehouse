@@ -48,6 +48,9 @@ reportNav.addEventListener("click", () => {
             <span class="row-text">${product.price}</span>
             <span class="row-text">${product.quantity}</span>
             <span class="row-text">${product.total}</span>
+            <span>
+               <button class="btn" onclick="deleteSale('${product.id}')"><img src="./img/remove.png" /></button>
+            </span>
          `;
          productsTable.append(productRow);
       });
@@ -72,7 +75,7 @@ goodsNav.addEventListener("click", () => {
    window.api.send("getProduct");
    window.api.receive("fromMain", (data) => {
       document.querySelector("#goodsCount").innerText = data.length;
-      document.querySelector("#goodsSumm").innerText = data.reduce((a, c) => a + c.price, 0);
+      document.querySelector("#goodsSumm").innerText = data.reduce((a, c) => a + c.price * c.quantity, 0);
       const products = document.getElementsByClassName("goods-row");
       while (products.length > 0) {
          products[0].parentNode.removeChild(products[0]);
@@ -174,6 +177,35 @@ const deleteProduct = (id) => {
    });
 };
 
+const deleteSale = (id) => {
+   window.api.send("deleteSale", id);
+   const productsTable = document.querySelector("#reportTable");
+   window.api.receive("updateProducts", (data) => {
+      const products = document.getElementsByClassName("goods-row");
+      while (products.length > 0) {
+         products[0].parentNode.removeChild(products[0]);
+      }
+      reportTotal = data.reduce((a, c) => a + c.total, 0);
+      document.querySelector("#reportCount").innerText = data.length;
+      document.querySelector("#reportSumm").innerText = reportTotal;
+      data.forEach((product) => {
+         const productRow = document.createElement("div");
+         productRow.classList.add("goods-row", "report");
+         productRow.innerHTML = `
+         <span class="row-text">${product.id}</span>
+         <span class="row-text">${product.name}</span>
+         <span class="row-text">${product.price}</span>
+         <span class="row-text">${product.quantity}</span>
+         <span class="row-text">${product.total}</span>
+         <span>
+            <button class="btn" onclick="deleteSale('${product.id}')"><img src="./img/remove.png" /></button>
+         </span>
+         `;
+         productsTable.append(productRow);
+      });
+   });
+};
+
 const editProduct = (id) => {
    const editpopup = document.querySelector("#edit");
    editpopup.setAttribute("style", "display: flex;");
@@ -187,7 +219,7 @@ const editProduct = (id) => {
       window.api.send("editProduct", { id, name, price, quantity });
       window.api.receive("updateProducts", () => {
          editpopup.setAttribute("style", "display: none;");
-         const response = confirm("Hello");
+         window.location.reload();
       });
    });
 };
@@ -233,7 +265,6 @@ confirmButton.addEventListener("click", () => {
          kassaTotal += sale.total;
          totalMoney.innerText = kassaTotal;
          kassaLeft.append(saleRow);
-         // window.api.receive("getProduct", (data) => console.log(data));
       } else {
          alert("Bu mahsulot ozroq qolgan");
       }

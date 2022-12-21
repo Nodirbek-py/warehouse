@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld("api", {
          "addSales",
          "getSales",
          "generateQR",
+         "deleteSale",
       ];
       if (validChannels.includes(channel)) {
          ipcRenderer.send(channel, data);
@@ -35,6 +36,7 @@ contextBridge.exposeInMainWorld("api", {
          "editProduct",
          "searchResult",
          "getSales",
+         "deleteSale",
       ];
       if (validChannels.includes(channel)) {
          // Deliberately strip event as it includes `sender`

@@ -2,9 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
-const bwipjs = require("bwip-js");
-const fs = require("fs");
-const {PosPrinter} = require("electron-pos-printer")
+const { PosPrinter } = require("electron-pos-printer");
 
 let mainWindow;
 
@@ -33,7 +31,6 @@ app.whenReady().then(() => {
    mainWindow.loadFile(path.join(__dirname, "index.html"));
    const products = store.get("products");
    mainWindow.webContents.send("fromMain", products);
-   mainWindow.webContents.openDevTools()
 });
 
 app.on("window-all-closed", () => {
@@ -74,6 +71,13 @@ ipcMain.on("deleteProduct", function (event, arg) {
    mainWindow.webContents.send("updateProducts", store.get("products"));
 });
 
+ipcMain.on("deleteSale", function (event, arg) {
+   let products = store.get("sales");
+   products = products.filter((product) => String(product.id) !== arg);
+   store.set("sales", products);
+   mainWindow.webContents.send("updateProducts", store.get("sales"));
+});
+
 ipcMain.on("editProduct", function (event, arg) {
    let products = store.get("products");
    products = products.map((product) => {
@@ -92,13 +96,13 @@ ipcMain.on("searchProduct", function (event, arg) {
    const product = products.find((item) => item.id === arg);
    if (product) {
       if (product.quantity === 0) {
-         mainWindow.webContents.send("searchResult", { product: {...product, name: "Bu mahsulot qolmadi"} });
-         console.log(product)
+         mainWindow.webContents.send("searchResult", { product: { ...product, name: "Bu mahsulot qolmadi" } });
+         console.log(product);
       } else {
          mainWindow.webContents.send("searchResult", { product });
       }
    } else {
-      mainWindow.webContents.send("searchResult", { product: {name: "Bunday mahsulot topilmadi", price: null} });
+      mainWindow.webContents.send("searchResult", { product: { name: "Bunday mahsulot topilmadi", price: null } });
    }
 });
 
@@ -146,26 +150,35 @@ ipcMain.on("getProduct", () => {
 });
 
 ipcMain.on("generateQR", async (event, arg) => {
-   PosPrinter.print([{
-      type: 'barCode',
-      value: arg.id,
-      height: 70,
-      width: 2,
-      displayValue: true,
-      fontsize: 20,
-      style: {
-         scale: 2,
-         textAlign: 'center',
-         marginBottom: 10
-      }
-   }], {
-      preview: false,
-      margin: '0 0 30px 0',
-      copies: 1,
-      printerName: 'XP-58 (copy 1)',
-      timeOutPerLine: 600,
-      pageSize: '80mm'
-   }).then((data)=>{console.log(data)}).catch((er)=> console.log(er))
+   PosPrinter.print(
+      [
+         {
+            type: "barCode",
+            value: arg.id,
+            height: 70,
+            width: 2,
+            displayValue: true,
+            fontsize: 20,
+            style: {
+               scale: 2,
+               textAlign: "center",
+               marginBottom: 10,
+            },
+         },
+      ],
+      {
+         preview: false,
+         margin: "0 0 30px 0",
+         copies: 1,
+         printerName: "XP-58 (copy 1)",
+         timeOutPerLine: 600,
+         pageSize: "80mm",
+      },
+   )
+      .then((data) => {
+         console.log(data);
+      })
+      .catch((er) => console.log(er));
    // bwipjs.toBuffer(
    //    {
    //       bcid: "code128",
@@ -183,5 +196,5 @@ ipcMain.on("generateQR", async (event, arg) => {
    //       }
    //    },
    // );
-// }
+   // }
 });
