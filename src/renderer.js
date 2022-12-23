@@ -229,6 +229,7 @@ let SearchedProduct = null;
 const searchButton = document.querySelector("#searchBtn");
 searchButton.addEventListener("click", () => {
    const query = document.querySelector("#search").value;
+   document.querySelector("#search").value = "";
    if (query !== "") {
       const title = document.querySelector("#productTitle");
       const price = document.querySelector("#productPrice");
