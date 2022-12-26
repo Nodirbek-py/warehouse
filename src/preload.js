@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld("api", {
          "getSales",
          "generateQR",
          "deleteSale",
+         "deleteKassa",
       ];
       if (validChannels.includes(channel)) {
          ipcRenderer.send(channel, data);

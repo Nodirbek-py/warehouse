@@ -280,7 +280,7 @@ nav {
 
 .kassa-header {
    display: grid;
-   grid-template-columns: 25px 1fr 1fr 1fr;
+   grid-template-columns: 25px 1fr 1fr 1fr 1fr;
    justify-items: center;
    padding: 3px 10px;
    background: #d3d3d3;
@@ -288,9 +288,11 @@ nav {
 }
 
 .row-kassa {
+   overflow: hidden;
    display: grid;
-   grid-template-columns: 25px 1fr 1fr 1fr;
+   grid-template-columns: 25px 1fr 1fr 1fr 1fr;
    justify-items: center;
+   align-items: center;
    padding: 3px 10px;
    background: #fff;
    margin: 3px 0;

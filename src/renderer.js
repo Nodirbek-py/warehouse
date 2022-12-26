@@ -206,6 +206,13 @@ const deleteSale = (id) => {
    });
 };
 
+const deleteSaleKassa = (id, quantity, total) => {
+   const kassaLeft = document.querySelector(".kassa-left");
+   document.querySelector("#kassaTotal").innerText = Number(document.querySelector("#kassaTotal").innerText) - total;
+   window.api.send("deleteKassa", { id, quantity });
+   kassaLeft.querySelector(`#${id}`).remove();
+};
+
 const editProduct = (id) => {
    const editpopup = document.querySelector("#edit");
    editpopup.setAttribute("style", "display: flex;");
@@ -226,6 +233,25 @@ const editProduct = (id) => {
 
 let SearchedProduct = null;
 
+document.querySelector("#search").addEventListener("focus", () => {
+   window.addEventListener("keydown", function (event) {
+      if (event.key == "Enter") {
+         const query = document.querySelector("#search").value;
+         document.querySelector("#search").value = "";
+         if (query !== "") {
+            const title = document.querySelector("#productTitle");
+            const price = document.querySelector("#productPrice");
+            window.api.send("searchProduct", query);
+            window.api.receive("searchResult", (data) => {
+               SearchedProduct = data;
+               title.innerText = data.product.name;
+               price.innerText = data.product.price + " so'm";
+            });
+         }
+      }
+   });
+});
+
 const searchButton = document.querySelector("#searchBtn");
 searchButton.addEventListener("click", () => {
    const query = document.querySelector("#search").value;
@@ -240,6 +266,43 @@ searchButton.addEventListener("click", () => {
          price.innerText = data.product.price + " so'm";
       });
    }
+});
+
+document.querySelector("#saleQuantity").addEventListener("focus", () => {
+   window.addEventListener("keydown", function (event) {
+      if (event.key == "Enter") {
+         const quantity = document.querySelector("#saleQuantity").value;
+         const kassaLeft = document.querySelector(".kassa-left");
+         const totalMoney = document.querySelector("#kassaTotal");
+         if (quantity !== "") {
+            if (SearchedProduct.product.quantity >= Number(quantity)) {
+               const sale = {
+                  ...SearchedProduct.product,
+                  quantity: Number(quantity),
+                  total: Number(quantity) * Number(SearchedProduct.product.price),
+               };
+               window.api.send("addSales", sale);
+               const saleRow = document.createElement("div");
+               saleRow.classList.add("row-kassa");
+               saleRow.id = SearchedProduct.product.id;
+               saleRow.innerHTML = `
+                  <span class="kassa-text">${sale.id}</span>
+                  <span class="kassa-text">${sale.name}</span>
+                  <span class="kassa-text">${quantity}</span>
+                  <span class="kassa-text">${sale.total} so'm</span>
+                  <span>
+                     <button class="btn" onclick="deleteSaleKassa('${sale.id}', ${quantity}, ${sale.total})"><img src="./img/remove.png" /></button>
+                  </span>
+         `;
+               kassaTotal += sale.total;
+               totalMoney.innerText = kassaTotal;
+               kassaLeft.append(saleRow);
+            } else {
+               alert("Bu mahsulot ozroq qolgan");
+            }
+         }
+      }
+   });
 });
 
 const confirmButton = document.querySelector("#confirm");
@@ -262,6 +325,9 @@ confirmButton.addEventListener("click", () => {
                   <span class="kassa-text">${sale.name}</span>
                   <span class="kassa-text">${quantity}</span>
                   <span class="kassa-text">${sale.total} so'm</span>
+                  <span>
+                     <button class="btn" onclick="deleteSaleKassa('${sale.id}', ${quantity}, ${sale.total})"><img src="./img/remove.png" /></button>
+                  </span>
          `;
          kassaTotal += sale.total;
          totalMoney.innerText = kassaTotal;

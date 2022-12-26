@@ -31,6 +31,7 @@ app.whenReady().then(() => {
    mainWindow.loadFile(path.join(__dirname, "index.html"));
    const products = store.get("products");
    mainWindow.webContents.send("fromMain", products);
+   mainWindow.webContents.openDevTools();
 });
 
 app.on("window-all-closed", () => {
@@ -147,6 +148,34 @@ ipcMain.on("getSales", () => {
 ipcMain.on("getProduct", () => {
    const products = store.get("products");
    mainWindow.webContents.send("fromMain", products);
+});
+
+ipcMain.on("deleteKassa", (event, { id, quantity }) => {
+   let sales = store.get("sales");
+   let products = store.get("products");
+   sales = sales.map((sale) => {
+      if (sale.id === id) {
+         return {
+            ...sale,
+            quantity: sale.quantity - quantity,
+            total: sale.total - quantity * sale.price,
+         };
+      } else {
+         return { ...sale };
+      }
+   });
+   store.set("sales", sales);
+   products = products.map((product) => {
+      if (product.id === id) {
+         return {
+            ...product,
+            quantity: product.quantity + quantity,
+         };
+      } else {
+         return { ...product };
+      }
+   });
+   store.set("products", products);
 });
 
 ipcMain.on("generateQR", async (event, arg) => {
