@@ -65,3 +65,6 @@ ipcMain.on("generateQR", async (event, arg) => {
       .catch((er) => console.log(er));
 });
 ```
+
+
+# IF YOU WANT SMTH MORE, ADD IT YOURSELF THE PROJECT IS OPEN-SOURCE, OR FINANCE ME I WILL ADD IT FOR YOU
